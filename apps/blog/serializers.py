@@ -16,7 +16,7 @@ from .models import (
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ['id', 'username']
 
 
 class TagsSerializer(serializers.ModelSerializer):
@@ -74,11 +74,16 @@ class SkillsSerializer(serializers.ModelSerializer):
 class BlogSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     tags = TagsSerializer(many=True, read_only=True)
-    category = CategoriesSerializer(read_only=True)
+    category_unit = serializers.CharField(source='get_category_unit_display', read_only=True)
 
     class Meta:
         model = Blog
         fields = ['id', 'slug', 'name', 'author', 'tags',
-                  'category', 'image', 'footer_content',
+                  'category', 'category_unit', 'image', 'footer_content',
                   'header_content', 'author_message']
+
+    def create(self, validated_data):
+        user_id = self.context['user_id']
+        validated_data['author_id'] = user_id
+        return super().create(validated_data)
 
