@@ -5,7 +5,9 @@ from .views import (
     ServicesViewSet,
     ProfessionsViewSet,
     ResultsViewSet,
-    SkillsViewSet
+    SkillsViewSet,
+    BlogsListCreateViews,
+    BlogsRUDAPIView
 
 )
 from rest_framework.routers import DefaultRouter
@@ -28,8 +30,6 @@ routerResults.register('results', ResultsViewSet, basename='results')
 routerSkills = DefaultRouter()
 routerSkills.register('skill', SkillsViewSet, basename='skill')
 
-
-
 app_name = 'blog'
 
 urlpatterns = [
@@ -39,5 +39,7 @@ urlpatterns = [
     path('', include(routerProfessions.urls)),
     path('', include(routerResults.urls)),
     path('', include(routerSkills.urls)),
+    path('list-create/', BlogsListCreateViews.as_view(), name='list-create'),
+    path('list-rud/<slug:slug>/', BlogsRUDAPIView.as_view(), name='list-rud'),
 ]
 

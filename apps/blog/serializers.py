@@ -56,12 +56,29 @@ class ProfessionsSerializer(serializers.ModelSerializer):
 
 
 class ResultsSerializer(serializers.ModelSerializer):
+    unit_name = serializers.CharField(source='get_unit_display', read_only=True)
+
     class Meta:
         model = Results
-        fields = '__all__'
+        fields = ['id', 'unit_name', 'unit', 'name', 'company', 'content', 'created_time', 'deleted_time',]
 
 
 class SkillsSerializer(serializers.ModelSerializer):
+    unit_name = serializers.CharField(source='get_unit_display', read_only=True)
+
     class Meta:
         model = Skills
-        fields = '__all__'
+        fields = ['id', 'name', 'unit_name', 'unit', 'full', 'Last_week', 'Last_month']
+
+
+class BlogSerializer(serializers.ModelSerializer):
+    author = UserSerializer(read_only=True)
+    tags = TagsSerializer(many=True, read_only=True)
+    category = CategoriesSerializer(read_only=True)
+
+    class Meta:
+        model = Blog
+        fields = ['id', 'slug', 'name', 'author', 'tags',
+                  'category', 'image', 'footer_content',
+                  'header_content', 'author_message']
+

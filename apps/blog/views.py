@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from rest_framework import viewsets, generics
+from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAuthorOrReadOnly
@@ -8,7 +11,8 @@ from .serializers import (
     ServicesSerializer,
     ProfessionsSerializer,
     ResultsSerializer,
-    SkillsSerializer
+    SkillsSerializer,
+    BlogSerializer
 
 )
 from .models import (
@@ -17,7 +21,7 @@ from .models import (
     Services,
     Profession,
     Results,
-    Skills
+    Skills, Blog
 )
 
 
@@ -55,3 +59,22 @@ class SkillsViewSet(ModelViewSet):
     queryset = Services.objects.all()
     serializer_class = SkillsSerializer
     permission_classes = [IsAuthorOrReadOnly]
+
+
+class BlogsListCreateViews(generics.ListCreateAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return BlogSerializer
+        return BlogSerializer
+
+
+class BlogsRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+    permission_classes = [IsAuthorOrReadOnly]
+    lookup_field = 'slug'
+
