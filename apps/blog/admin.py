@@ -1,6 +1,5 @@
 from django.contrib import admin
 from .models import (
-    Partners,
     Subblog,
     Blog,
     Tags,
@@ -11,11 +10,6 @@ from .models import (
     Results,
     Skills
 )
-
-
-class PartnersInline(admin.TabularInline):
-    model = Partners
-    extra = 0
 
 
 class CommentsInline(admin.TabularInline):

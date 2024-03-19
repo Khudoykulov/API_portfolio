@@ -6,11 +6,6 @@ from django.utils import timezone
 from django.db.models.signals import pre_save
 
 
-class Partners(models.Model):
-    AboutMe = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='partners')
-    image = models.ImageField(upload_to='images/', null=True, blank=True)
-
-
 class Tags(models.Model):
     name = models.CharField(max_length=123)
 
