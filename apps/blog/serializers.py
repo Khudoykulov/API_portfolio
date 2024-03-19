@@ -42,3 +42,26 @@ class ServicesSerializer(serializers.ModelSerializer):
         user_id = self.context['user_id']
         validated_data['author_id'] = user_id
         return super().create(validated_data)
+
+
+class ProfessionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profession
+        fields = '__all__'
+
+    def create(self, validated_data):
+        user_id = self.context['user_id']
+        validated_data['author_id'] = user_id
+        return super().create(validated_data)
+
+
+class ResultsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Results
+        fields = '__all__'
+
+
+class SkillsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Skills
+        fields = '__all__'

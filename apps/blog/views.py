@@ -5,13 +5,19 @@ from .permissions import IsAuthorOrReadOnly
 from .serializers import (
     TagsSerializer,
     CategoriesSerializer,
-    ServicesSerializer
+    ServicesSerializer,
+    ProfessionsSerializer,
+    ResultsSerializer,
+    SkillsSerializer
 
 )
 from .models import (
     Tags,
     Categories,
-    Services
+    Services,
+    Profession,
+    Results,
+    Skills
 )
 
 
@@ -30,4 +36,22 @@ class CategoriesViewSet(ModelViewSet):
 class ServicesViewSet(ModelViewSet):
     queryset = Services.objects.all()
     serializer_class = ServicesSerializer
+    permission_classes = [IsAuthorOrReadOnly]
+
+
+class ProfessionsViewSet(ModelViewSet):
+    queryset = Profession.objects.all()
+    serializer_class = ProfessionsSerializer
+    permission_classes = [IsAuthorOrReadOnly]
+
+
+class ResultsViewSet(ModelViewSet):
+    queryset = Results.objects.all()
+    serializer_class = ResultsSerializer
+    permission_classes = [IsAuthorOrReadOnly]
+
+
+class SkillsViewSet(ModelViewSet):
+    queryset = Services.objects.all()
+    serializer_class = SkillsSerializer
     permission_classes = [IsAuthorOrReadOnly]

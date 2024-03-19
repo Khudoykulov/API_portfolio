@@ -88,7 +88,7 @@ class Results(models.Model):
     UNIT = (
         (0, 'Education'),
         (1, 'Experience'),
-        (3, 'Awards')
+        (2, 'Awards')
     )
     unit = models.IntegerField(choices=UNIT,)
     name = models.CharField(max_length=123)
