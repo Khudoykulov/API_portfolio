@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, status
+from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 from rest_framework.viewsets import ModelViewSet
@@ -10,9 +11,12 @@ from .serializers import (
     CategoriesSerializer,
     ServicesSerializer,
     ProfessionsSerializer,
+    ProfessionsPostSerializer,
     ResultsSerializer,
     SkillsSerializer,
-    BlogSerializer
+    BlogPostSerializer,
+    BlogSerializer,
+    ServicesPostSerializer
 
 )
 from .models import (
@@ -40,13 +44,34 @@ class CategoriesViewSet(ModelViewSet):
 class ServicesViewSet(ModelViewSet):
     queryset = Services.objects.all()
     serializer_class = ServicesSerializer
+    serializer_post_class = ServicesPostSerializer
     permission_classes = [IsAuthorOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return ServicesSerializer
+        return ServicesPostSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response({'message': 'delete'})
 
 
 class ProfessionsViewSet(ModelViewSet):
     queryset = Profession.objects.all()
     serializer_class = ProfessionsSerializer
     permission_classes = [IsAuthorOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return ProfessionsSerializer
+        return ProfessionsPostSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response({'message': 'delete'})
 
 
 class ResultsViewSet(ModelViewSet):
@@ -56,7 +81,7 @@ class ResultsViewSet(ModelViewSet):
 
 
 class SkillsViewSet(ModelViewSet):
-    queryset = Services.objects.all()
+    queryset = Skills.objects.all()
     serializer_class = SkillsSerializer
     permission_classes = [IsAuthorOrReadOnly]
 
@@ -69,7 +94,7 @@ class BlogsListCreateViews(generics.ListCreateAPIView):
     def get_serializer_class(self):
         if self.request.method == "GET":
             return BlogSerializer
-        return BlogSerializer
+        return BlogPostSerializer
 
 
 class BlogsRUDAPIView(generics.RetrieveUpdateDestroyAPIView):

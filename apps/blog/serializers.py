@@ -38,19 +38,33 @@ class ServicesSerializer(serializers.ModelSerializer):
         model = Services
         fields = ['id', 'author', 'name', 'content']
 
+
+class ServicesPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Services
+        fields = ['id', 'name', 'content']
+
     def create(self, validated_data):
-        user_id = self.context['user_id']
-        validated_data['author_id'] = user_id
+        request = self.context['request']
+        validated_data['author_id'] = request.user.id
         return super().create(validated_data)
 
 
 class ProfessionsSerializer(serializers.ModelSerializer):
+    author = UserSerializer(read_only=True)
+
     class Meta:
         model = Profession
-        fields = '__all__'
+        fields = ['author', 'name']
+
+
+class ProfessionsPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profession
+        fields = ['name']
 
     def create(self, validated_data):
-        user_id = self.context['user_id']
+        user_id = self.context['request'].user.id
         validated_data['author_id'] = user_id
         return super().create(validated_data)
 
@@ -71,19 +85,27 @@ class SkillsSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'unit_name', 'unit', 'full', 'Last_week', 'Last_month']
 
 
-class BlogSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
-    tags = TagsSerializer(many=True, read_only=True)
-    category_unit = serializers.CharField(source='get_category_unit_display', read_only=True)
+class BlogPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = ['id', 'slug', 'name', 'author', 'tags',
-                  'category', 'category_unit', 'image', 'footer_content',
+        fields = ['name', 'tags',
+                  'category', 'image', 'footer_content',
                   'header_content', 'author_message']
 
     def create(self, validated_data):
-        user_id = self.context['user_id']
+        user_id = self.context['request'].user.id
         validated_data['author_id'] = user_id
         return super().create(validated_data)
 
+
+class BlogSerializer(serializers.ModelSerializer):
+    author = UserSerializer(read_only=True)
+    tags = TagsSerializer(many=True, read_only=True)
+    category = CategoriesSerializer(read_only=True)
+
+    class Meta:
+        model = Blog
+        fields = ['id', 'author', 'name', 'tags',
+                  'category', 'image', 'footer_content',
+                  'header_content', 'author_message', 'slug', 'created_date']
